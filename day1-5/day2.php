@@ -20,7 +20,7 @@ $points = 0;
 foreach ( $rounds as $round )
     $points += $games [ $round ];
 
-echo "First part: $points\n";
+echo "Réponse première partie : $points\n";
 
 // alright... 9 different outcomes, still easy to precalculate
 $games2 = [
@@ -40,4 +40,4 @@ $points2 = 0;
 foreach ( $rounds as $round )
     $points2 += $games2 [ $round ];
 
-echo "Second part: $points2\n";
+echo "Réponse deuxième partie : $points2\n";

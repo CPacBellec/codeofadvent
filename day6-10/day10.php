@@ -26,9 +26,9 @@ $signal_strength_sum = 0;
 foreach ( [20, 60, 100, 140, 180, 220] as $cycle )
     $signal_strength_sum += $cycle * $cycles [ $cycle - 1 ];
 
-echo "First part: $signal_strength_sum\n";
+echo "Réponse première partie: $signal_strength_sum\n";
 
-echo "Second part:";
+echo "Réponse deuxième partie:";
 
 for ( $pixel = 0; $pixel < 240; $pixel++ )
 {

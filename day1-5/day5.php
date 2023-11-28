@@ -35,7 +35,7 @@ foreach ( $procedure as $task )
 
     $crates_to_move = [];
 
-    // offset stack numbers by 1 for obvs. reasons
+    // offset stack numbers by 1
     for ( $i = 0; $i < $matches [ 1 ]; $i++ )
     {
         // part 1: each crate individually
@@ -52,8 +52,8 @@ foreach ( $procedure as $task )
 $top_crates1 = getTopCrates ( $stacks1 );
 $top_crates2 = getTopCrates ( $stacks2 );
 
-echo "First part: $top_crates1\n";
-echo "Second part: $top_crates2\n";
+echo "Réponse première partie : $top_crates1\n";
+echo "Réponse deuxième partie : $top_crates2\n";
 
 function getTopCrates ( $stacks )
 {

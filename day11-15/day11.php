@@ -20,13 +20,6 @@ foreach ( explode ( "\n\n", $input ) as $monkey )
 
 function business ( $monkeys, $part )
 {
-    // in part 2 worry levels get very big very soon
-    // but we need to keep them low
-    // since all monkey's modulos are prime numbers
-    // we can multiply them to get a combined modulo
-    // using this we keep the numbers manageable
-    // resulting worry levels are not real, but the
-    // corresponding operations stay the same
 
     $fake_relief = 1;
 
@@ -66,6 +59,6 @@ function business ( $monkeys, $part )
     return array_pop ( $inspections ) * array_pop ( $inspections );
 }
 
-echo 'First part: '  . business ( $monkeys, 1 ) . "\n";
-echo 'Second part: ' . business ( $monkeys, 2 ) . "\n";
+echo 'Réponse première partie : '  . business ( $monkeys, 1 ) . "\n";
+echo 'Réponse deuxième partie : ' . business ( $monkeys, 2 ) . "\n";
 

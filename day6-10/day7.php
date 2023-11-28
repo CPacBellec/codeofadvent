@@ -7,7 +7,6 @@ $directories = [];
 
 foreach ( $input as $line )
 {
-    // don't need that
     if ( $line == '$ ls' || str_starts_with ( $line, 'dir ' ) )
         continue;
 
@@ -44,9 +43,6 @@ foreach ( $input as $line )
     }
 }
 
-// now both parts in one
-// iterate through the sorted directories in ascending order and pull the correct info
-
 $part1_sum = $part2_sum = 0;
 
 $space_available         = 70000000 - $directories [ '/' ];
@@ -66,5 +62,5 @@ foreach ( $directories as $size )
         break;
 }
 
-echo "First part: $part1_sum\n";
-echo "Second part: $part2_sum\n";
+echo "Réponse première partie : $part1_sum\n";
+echo "Réponse deuxième partie : $part2_sum\n";
