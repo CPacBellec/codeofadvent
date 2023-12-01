@@ -1,16 +1,10 @@
 <?php
-
-//include __DIR__ . '/visualize.php';
-
 $input = file ( __DIR__ . '/input-day8.txt', FILE_IGNORE_NEW_LINES );
 
 $visible_trees = [];
 
 $max_row = count ( $input ) - 1;
 $max_col = strlen ( $input [ 0 ] ) - 1;
-
-// we save the highest found tree from each direction so we just have
-// to compare against those instead of every tree in all directions
 
 $highest_trees = [ 'row' => [], 'col' => [] ];
 
@@ -25,10 +19,8 @@ for ( $i = 0; $i <= $max_row; $i++ )
     $highest_trees [ 'row' ][ $i ][ 'right' ] = -1;
 }
 
-// also we collect trees by height for the second part
 $trees_by_height = [];
 
-// first we can only check from top and left
 for ( $y = 0; $y <= $max_row; $y++ )
     for ( $x = 0; $x <= $max_col; $x++ )
     {
@@ -48,7 +40,6 @@ for ( $y = 0; $y <= $max_row; $y++ )
         }
     }
 
-// now the other way around
 for ( $y = $max_row; $y >= 0; $y-- )
     for ( $x = $max_col; $x >= 0; $x-- )
     {
@@ -65,12 +56,7 @@ for ( $y = $max_row; $y >= 0; $y-- )
         }
     }
 
-echo 'First part: ' . count ( $visible_trees ) . "\n";
-
-// we collected all trees by height, so we just have to compare tall
-// trees to ones of equal or even larger sizes, that share one of both
-// coordinates
-// we can assume the distance to the border in all other cases
+echo 'Réponse partie 1 ' . count ( $visible_trees ) . "\n";
 
 ksort ( $trees_by_height );
 
@@ -95,7 +81,7 @@ while ( $tall_trees = array_pop ( $trees_by_height ) )
 
         foreach ( $taller_trees as $compare )
         {
-            // don't compare with myself
+            
             if ( $tree [ 'x' ] == $compare [ 'x' ] && $tree [ 'y' ] == $compare [ 'y' ] )
                 continue;
 
@@ -130,7 +116,7 @@ while ( $tall_trees = array_pop ( $trees_by_height ) )
     }
 }
 
-echo "Second part: $max_scenic_score\n";
+echo "Réponse partie 2 $max_scenic_score\n";
 
 
 

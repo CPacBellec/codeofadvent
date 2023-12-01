@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calories Counter</title>
+</head>
+<body>
+
+<input type="file" id="fileInput" />
+<button onclick="processFile()">Calculate Calories</button>
+
+<script>
+    function processFile() {
+        const fileInput = document.getElementById('fileInput');
+        const file = fileInput.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const content = e.target.result;
+                const elvesData = content.split('\n\n');
+
+                let maxCalories = 0;
+
+                elvesData.forEach((elfData, index) => {
+                    const caloriesList = elfData.trim().split('\n').map(Number);
+                    const totalCalories = caloriesList.reduce((sum, calories) => sum + calories, 0);
+
+                    if (totalCalories > maxCalories) {
+                        maxCalories = totalCalories;
+                    }
+                });
+
+                alert(`The Elf carrying the most Calories is carrying ${maxCalories} Calories.`);
+            };
+
+            reader.readAsText(file);
+        } else {
+            alert('Please select a file.');
+        }
+    }
+</script>
+
+</body>
+</html>

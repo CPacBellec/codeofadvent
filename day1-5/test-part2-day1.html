@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calories Counter</title>
+</head>
+<body>
+
+<input type="file" id="fileInput" />
+<button onclick="processFile()">Calculate Calories</button>
+
+<script>
+    function processFile() {
+        const fileInput = document.getElementById('fileInput');
+        const file = fileInput.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const content = e.target.result;
+                const elvesData = content.split('\n\n');
+
+                let maxCalories = 0;
+                let topThreeCalories = [0, 0, 0];
+
+                elvesData.forEach((elfData, index) => {
+                    const caloriesList = elfData.trim().split('\n').map(Number);
+                    const totalCalories = caloriesList.reduce((sum, calories) => sum + calories, 0);
+
+                    if (totalCalories > maxCalories) {
+                        topThreeCalories[2] = topThreeCalories[1];
+                        topThreeCalories[1] = topThreeCalories[0];
+                        topThreeCalories[0] = totalCalories;
+
+                        maxCalories = totalCalories;
+                    } else if (totalCalories > topThreeCalories[1]) {
+                        topThreeCalories[2] = topThreeCalories[1];
+                        topThreeCalories[1] = totalCalories;
+                    } else if (totalCalories > topThreeCalories[2]) {
+                        topThreeCalories[2] = totalCalories;
+                    }
+                });
+
+                const totalTopThreeCalories = topThreeCalories.reduce((sum, calories) => sum + calories, 0);
+
+                alert(`The top three Elves are carrying a total of ${totalTopThreeCalories} Calories.`);
+            };
+
+            reader.readAsText(file);
+        } else {
+            alert('Please select a file.');
+        }
+    }
+</script>
+
+</body>
+</html>

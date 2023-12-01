@@ -1,52 +1,91 @@
 <?php
 
-$input = file_get_contents("input-day9.txt");
-$moves = explode("\n", $input);
+$input = file ( __DIR__ . '/input-day9.txt', FILE_IGNORE_NEW_LINES );
 
-// Initial position of head and tail
-$head = [0, 0];
-$tail = [0, 0];
+$positions_of_tail = [];
 
-// Visited positions
-$visited = ["0,0" => true];
+$rope = [];
 
-foreach ($moves as $move) {
-    list($direction, $steps) = sscanf($move, "%s %d");
+for ( $length = 0; $length < 10; $length++ )
+    $rope[] = [ 0, 0 ]; // X|Y
 
-    for ($i = 0; $i < $steps; $i++) {
-        // Update head position based on the move
-        switch ($direction) {
-            case 'U':
-                $head[1]--;
-                break;
-            case 'D':
-                $head[1]++;
-                break;
-            case 'L':
-                $head[0]--;
-                break;
-            case 'R':
-                $head[0]++;
-                break;
+foreach ( $input as $move )
+{
+    list ( $direction, $steps ) = explode ( ' ', $move );
+
+    for ( $i = 0; $i < $steps; $i++ )
+    {
+        
+        switch ( $direction )
+        {
+            case 'L': $rope [ 0 ][ 0 ]--; break;
+            case 'R': $rope [ 0 ][ 0 ]++; break;
+            case 'D': $rope [ 0 ][ 1 ]--; break;
+            case 'U': $rope [ 0 ][ 1 ]++; break;
         }
 
-        // Check if head and tail are adjacent
-        if (abs($head[0] - $tail[0]) <= 1 && abs($head[1] - $tail[1]) <= 1) {
-            $tail = $head; // Move tail to head
-        } else {
-            // Move tail diagonally towards head
-            $tail[0] += ($head[0] - $tail[0]) <=> 0;
-            $tail[1] += ($head[1] - $tail[1]) <=> 0;
+        
+        for ( $length = 1; $length < 10; $length++ )
+        {
+            $prev = $length - 1;
+
+
+            if (    $rope [ $prev ][ 0 ] == $rope [ $length ][ 0 ]
+                 && $rope [ $prev ][ 1 ] == $rope [ $length ][ 1 ] )
+                break;
+
+            // horizontally
+            if ( $rope [ $prev ][ 0 ] == $rope [ $length ][ 0 ] )
+            {
+                $distance = $rope [ $prev ][ 1 ] - $rope [ $length ][ 1 ];
+
+                if ( $distance == -2 )
+                    $rope [ $length ][ 1 ]--;
+                elseif ( $distance == 2 )
+                    $rope [ $length ][ 1 ]++;
+            }
+
+            //vertically
+            elseif ( $rope [ $prev ][ 1 ] == $rope [ $length ][ 1 ] )
+            {
+                $distance = $rope [ $prev ][ 0 ] - $rope [ $length ][ 0 ];
+
+                if ( $distance == -2 )
+                    $rope [ $length ][ 0 ]--;
+                elseif ( $distance == 2 )
+                    $rope [ $length ][ 0 ]++;
+            }
+
+            // diagonally
+            else
+            {
+                $distance_x = $rope [ $prev ][ 0 ] - $rope [ $length ][ 0 ];
+                $distance_y = $rope [ $prev ][ 1 ] - $rope [ $length ][ 1 ];
+
+                if ( abs ( $distance_y ) == 2 )
+                {
+                    $rope [ $length ][ 1 ] += $distance_y/2;
+
+                    if ( abs ( $distance_x ) == 1 )
+                        $rope [ $length ][ 0 ] = $rope [ $prev ][ 0 ];
+                }
+
+                if ( abs ( $distance_x ) == 2 )
+                {
+                    $rope [ $length ][ 0 ] += $distance_x/2;
+
+                    if ( abs ( $distance_y ) == 1 )
+                        $rope [ $length ][ 1 ] = $rope [ $prev ][ 1 ];
+                }
+            }
         }
 
-        // Mark the visited position
-        $visited["$tail[0],$tail[1]"] = true;
+        
+        $positions_of_tail [ 1 ][ $rope [ 1 ][ 0 ] . '|' . $rope [ 1 ][ 1 ] ] = true;
+        $positions_of_tail [ 9 ][ $rope [ 9 ][ 0 ] . '|' . $rope [ 9 ][ 1 ] ] = true;
     }
 }
 
-// Count the number of unique visited positions
-$count = count($visited);
-echo "Number of positions visited at least once: $count\n";
-
-
+echo 'Réponse partie 1 :  ' .  count ( $positions_of_tail [ 1 ] ) . "\n";
+echo 'Réponse partie 2 :  ' . count ( $positions_of_tail [ 9 ] ) . "\n";
 
