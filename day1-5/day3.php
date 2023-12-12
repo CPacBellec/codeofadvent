@@ -53,6 +53,6 @@ function getPriority ( $item )
 {
     $val = ord ( $item );
 
-    // lowercase: 97-122, uppercase: 65 - 90
+    // ASCII lowercase: 97-122, uppercase: 65 - 90
     return ( $val > 90 ) ? $val - 96 : $val - 38;
 }
