@@ -2,7 +2,7 @@
 
 $rounds = file ( __DIR__ . '/input-day2.txt', FILE_IGNORE_NEW_LINES );
 
-// there's 9 possible games... let's just list their outcomes
+// 9 choix possible
 $games = [
     'A X' => 4,
     'A Y' => 8,
@@ -22,7 +22,7 @@ foreach ( $rounds as $round )
 
 echo "Réponse première partie : $points\n";
 
-// alright... 9 different outcomes, still easy to precalculate
+// 9 choix, pas les memes regles
 $games2 = [
     'A X' => 3,
     'A Y' => 4,

@@ -10,8 +10,7 @@ foreach ( $rucksacks as &$rucksack )
 
     $compartments = str_split ( $rucksack, $compartment_size );
 
-    // items are only counted once, even if they appear multiple times in
-    // the same compartment hence we unify...
+    // items comptés une seule fois même si ils apparaissent plusieurs fois...
 
     $content = str_split ( $compartments [ 0 ] );
 
@@ -22,7 +21,7 @@ foreach ( $rucksacks as &$rucksack )
             $prio_sum += getPriority ( $item );
 }
 
-echo "First part: $prio_sum\n";
+echo "Résultat réponse 1: $prio_sum\n";
 
 $badge_sum = 0;
 
@@ -48,7 +47,7 @@ while ( count ( $rucksacks ) )
         }
 }
 
-echo "Second part: $badge_sum\n";
+echo "Résultat réponse 2: $badge_sum\n";
 
 function getPriority ( $item )
 {

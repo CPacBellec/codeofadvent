@@ -8,7 +8,7 @@ list ( $configuration, $procedure ) = explode ( "\n\n", $input );
 
 $configuration = explode ( "\n", $configuration );
 
-array_pop ( $configuration ); // only numbers... we can infer those
+array_pop ( $configuration ); 
 
 $stacks1 = [];
 
@@ -21,7 +21,6 @@ while ( $row = array_pop ( $configuration ) )
             $stacks1 [ $i ][] = $match [ 1 ];
 }
 
-// now parse the tasks on two copies of the stacks
 
 $stacks2 = $stacks1;
 
@@ -35,13 +34,10 @@ foreach ( $procedure as $task )
 
     $crates_to_move = [];
 
-    // offset stack numbers by 1
     for ( $i = 0; $i < $matches [ 1 ]; $i++ )
     {
-        // part 1: each crate individually
         $stacks1 [ $matches [ 3 ] - 1 ][] = array_pop ( $stacks1 [ $matches [ 2 ] - 1 ] );
 
-        // part 2: move crate clusters
         $crates_to_move[] = array_pop ( $stacks2 [ $matches [ 2 ] - 1 ] );
     }
 
