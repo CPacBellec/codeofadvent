@@ -1,0 +1,728 @@
+Jour 1
+
+Lecture du fichier d'entrée :
+
+$input = file_get_contents(__DIR__ . '/input-day1.txt');
+
+Cette ligne utilise la fonction file_get_contents pour lire le contenu du fichier dont le chemin est spécifié par __DIR__ . '/input-day1.txt'. Le contenu du fichier est stocké dans la variable $input.
+
+Séparation des données des elfes :
+
+$calories_by_elf = explode("\n\n", $input);
+
+Les données des elfes sont séparées en utilisant la fonction explode qui divise la chaîne $input en un tableau, en utilisant deux retours à la ligne (\n\n) comme délimiteur. Cela suppose que les données des elfes sont séparées par des lignes vides dans le fichier d'entrée.
+
+Calcul des sommes des calories par elfe :
+
+$sums = [];
+foreach ($calories_by_elf as $elf_nr => $cbf)
+    $sums[] = array_sum(explode("\n", $cbf));
+
+Une boucle foreach itère sur chaque ensemble de données d'elfe ($calories_by_elf). Pour chaque ensemble, il divise les lignes par le caractère de nouvelle ligne (\n) et calcule la somme des valeurs obtenues avec array_sum. Cette somme est ensuite ajoutée au tableau $sums.
+
+Affichage de la réponse partie 1 :
+
+echo 'Réponse partie 1 : ' . max($sums) . "\n";
+
+La réponse à la première partie du problème est affichée en utilisant la fonction max pour trouver la valeur maximale dans le tableau $sums.
+
+Tri du tableau des sommes par ordre décroissant :
+
+rsort($sums);
+
+Le tableau des sommes $sums est trié en ordre décroissant à l'aide de la fonction rsort.
+
+Calcul de la somme des trois premières valeurs :
+
+$topthree = 0;
+for ($i = 0; $i < 3; $i++)
+    $topthree += $sums[$i];
+
+Une boucle for itère sur les trois premières valeurs triées dans le tableau $sums, et la somme de ces trois valeurs est stockée dans la variable $topthree.
+
+Affichage de la réponse partie 2 :
+
+echo "Réponse partie 2 : $topthree\n";
+
+La réponse à la deuxième partie du problème est affichée, représentée par la variable $topthree.
+
+Jour 2 
+
+Lecture du fichier d'entrée :
+$rounds = file(__DIR__ . '/input-day2.txt', FILE_IGNORE_NEW_LINES);
+Le contenu du fichier input-day2.txt est lu ligne par ligne et stocké dans le tableau $rounds. La constante FILE_IGNORE_NEW_LINES est utilisée pour ignorer les caractères de nouvelle ligne dans chaque ligne du fichier.
+
+Définition des règles du premier jeu :
+
+$games = [
+    'A X' => 4,
+    'A Y' => 8,
+    'A Z' => 3,
+    'B X' => 1,
+    'B Y' => 5,
+    'B Z' => 9,
+    'C X' => 7,
+    'C Y' => 2,
+    'C Z' => 6
+];
+
+Les règles pour le premier jeu sont définies dans le tableau associatif $games, où chaque clé représente une combinaison de joueur et de choix, et la valeur correspondante représente les points attribués.
+
+Calcul des points pour le premier jeu :
+
+$points = 0;
+
+foreach ($rounds as $round)
+    $points += $games[$round];
+
+echo "Réponse première partie : $points\n";
+
+Une boucle foreach itère sur chaque tour dans le tableau $rounds, et les points correspondants au tour sont ajoutés à la variable $points. Ensuite, la réponse à la première partie du problème est affichée.
+
+Définition des règles du deuxième jeu :
+
+$games2 = [
+    'A X' => 3,
+    'A Y' => 4,
+    'A Z' => 8,
+    'B X' => 1,
+    'B Y' => 5,
+    'B Z' => 9,
+    'C X' => 2,
+    'C Y' => 6,
+    'C Z' => 7
+];
+
+
+Les règles pour le deuxième jeu sont définies de la même manière, mais avec des valeurs différentes.
+
+Calcul des points pour le deuxième jeu :
+
+$points2 = 0;
+
+foreach ($rounds as $round)
+    $points2 += $games2[$round];
+
+echo "Réponse deuxième partie : $points2\n";
+
+
+Une boucle similaire est utilisée pour calculer les points pour le deuxième jeu, et la réponse à la deuxième partie du problème est affichée.
+
+Jour 3
+
+Lecture du fichier d'entrée :
+
+$rucksacks = file(__DIR__ . '/input-day3.txt', FILE_IGNORE_NEW_LINES);
+
+Le contenu du fichier input-day3.txt est lu ligne par ligne et stocké dans le tableau $rucksacks. La constante FILE_IGNORE_NEW_LINES est utilisée pour ignorer les caractères de nouvelle ligne dans chaque ligne du fichier.
+
+Calcul de la somme des priorités pour la première partie :
+
+$prio_sum = 0;
+
+foreach ($rucksacks as &$rucksack) {
+    // ... (voir étapes suivantes)
+    $prio_sum += getPriority($item);
+}
+
+echo "Résultat réponse 1: $prio_sum\n";
+
+Une boucle foreach itère sur chaque rucksack. À l'intérieur de la boucle, le contenu du rucksack est analysé pour calculer la somme des priorités des articles à l'intérieur. La fonction getPriority est utilisée pour attribuer une priorité à chaque article.
+
+Traitement du contenu du rucksack pour la première partie :
+
+$compartment_size = strlen($rucksack) / 2;
+$compartments = str_split($rucksack, $compartment_size);
+$content = str_split($compartments[0]);
+$content = array_unique($content);
+
+
+Le rucksack est divisé en deux compartiments, et le contenu du premier compartiment est extrait. Les articles sont comptés une seule fois même s'ils apparaissent plusieurs fois.
+
+Vérification de l'apparition d'un article dans le deuxième compartiment :
+
+foreach ($content as $item) {
+    if (strpos($compartments[1], $item) !== false) {
+        $prio_sum += getPriority($item);
+    }
+}
+
+Une boucle vérifie si chaque article du premier compartiment apparaît également dans le deuxième compartiment. Si c'est le cas, la priorité de cet article est ajoutée à la somme des priorités.
+
+Calcul de la somme des priorités pour la deuxième partie :
+
+$badge_sum = 0;
+
+while (count($rucksacks)) {
+    // ... (voir étapes suivantes)
+    $badge_sum += getPriority($group[0][$i]);
+}
+
+echo "Résultat réponse 2: $badge_sum\n";
+
+Une boucle while est utilisée pour traiter les rucksacks en groupes de trois. À l'intérieur de cette boucle, la somme des priorités des articles communs aux trois rucksacks est calculée.
+
+Traitement du groupe de rucksacks pour la deuxième partie :
+
+$group = [
+    array_pop($rucksacks),
+    array_pop($rucksacks),
+    array_pop($rucksacks)
+];
+
+usort($group, function ($a, $b) {
+    return strlen($a) > strlen($b);
+});
+
+for ($i = 0; $i < strlen($group[0]); $i++) {
+    if (strpos($group[1], $group[0][$i]) !== false && strpos($group[2], $group[0][$i]) !== false) {
+        $badge_sum += getPriority($group[0][$i]);
+        break;
+    }
+}
+
+Un groupe de trois rucksacks est formé et trié en fonction de leur taille. Ensuite, une boucle vérifie si chaque article du rucksack le plus petit (le premier élément du groupe) apparaît dans les deux autres rucksacks du groupe. Si c'est le cas, la priorité de cet article est ajoutée à la somme des priorités.
+
+Définition de la fonction getPriority :
+
+function getPriority($item) {
+    $val = ord($item);
+    return ($val > 90) ? $val - 96 : $val - 38;
+}
+
+Cette fonction attribue une priorité à un article en fonction de sa valeur ASCII. Les articles en minuscules ont une priorité de 1 à 26, et les articles en majuscules ont une priorité de 27 à 52.
+
+Jour 4
+
+Lecture du fichier d'entrée :
+
+$input = file(__DIR__ . '/input-day4.txt');
+
+Le contenu du fichier input-day4.txt est lu ligne par ligne et stocké dans le tableau $input.
+
+Initialisation des compteurs :
+
+$fully_contained = $overlap = 0;
+
+Deux compteurs, $fully_contained et $overlap, sont initialisés à zéro.
+
+Traitement de chaque paire d'intervalles :
+
+foreach ($input as $pair) {
+    $pair = explode(',', $pair);
+
+    foreach ($pair as &$elf)
+        $elf = explode('-', $elf);
+
+Une boucle foreach itère sur chaque paire dans le tableau $input. Chaque paire est ensuite divisée en deux intervalles en utilisant la virgule comme délimiteur, et chaque intervalle est à son tour divisé en deux bornes en utilisant le trait d'union comme délimiteur.
+
+Vérification des conditions d'entière inclusion ou de chevauchement :
+
+if ((($pair[0][0] >= $pair[1][0] && $pair[0][1] <= $pair[1][1]) || ($pair[0][0] <= $pair[1][0] && $pair[0][1] >= $pair[1][1]))) {
+    $fully_contained++;
+    $overlap++;
+} elseif ((($pair[0][1] >= $pair[1][0] && $pair[0][1] <= $pair[1][1]) || ($pair[1][1] >= $pair[0][0] && $pair[1][1] <= $pair[0][1]))) {
+    $overlap++;
+}
+
+Les conditions vérifient si une plage est entièrement contenue dans l'autre ou si les plages se chevauchent. Les compteurs appropriés ($fully_contained et $overlap) sont incrémentés en conséquence.
+
+Affichage des résultats :
+
+echo "Le nombre de paires d'assignments où une plage est entièrement contenue dans l'autre est: $fully_contained\n";
+echo "Le nombre de paires d'assignments où les plages se chevauchent est: $overlap\n";
+
+Les résultats sont affichés à la fin du script.
+
+Jour 5
+
+Lecture du fichier d'entrée et séparation de la configuration et de la procédure :
+
+$input = file_get_contents(__DIR__ . '/input-day5.txt');
+list($configuration, $procedure) = explode("\n\n", $input);
+Le contenu du fichier input-day5.txt est divisé en deux parties : la configuration initiale ($configuration) et la procédure de déplacement de caisses ($procedure).
+
+Traitement de la configuration initiale :
+
+$configuration = explode("\n", $configuration);
+array_pop($configuration);
+
+$stacks1 = [];
+
+while ($row = array_pop($configuration)) {
+    $crates = str_split($row, 4);
+
+    foreach ($crates as $i => $crate) {
+        if (preg_match('~^\[([A-Z])]~', $crate, $match)) {
+            $stacks1[$i][] = $match[1];
+        }
+    }
+}
+La configuration initiale est traitée, et les caisses sont placées dans les piles ($stacks1) en suivant les règles définies dans le code.
+
+Copie de la configuration initiale pour la deuxième partie :
+
+$stacks2 = $stacks1;
+Une copie des piles est créée pour la deuxième partie du problème.
+
+Traitement de la procédure de déplacement de caisses :
+
+$procedure = explode("\n", $procedure);
+
+foreach ($procedure as $task) {
+    preg_match('~^move (\d+) from (\d+) to (\d+)~', $task, $matches);
+
+    $crates_to_move = [];
+
+    for ($i = 0; $i < $matches[1]; $i++) {
+        $stacks1[$matches[3] - 1][] = array_pop($stacks1[$matches[2] - 1]);
+        $crates_to_move[] = array_pop($stacks2[$matches[2] - 1]);
+    }
+
+    while ($ctm = array_pop($crates_to_move)) {
+        $stacks2[$matches[3] - 1][] = $ctm;
+    }
+}
+La procédure de déplacement de caisses est exécutée, en effectuant les opérations spécifiées dans le fichier d'entrée.
+
+Détermination des configurations résultantes pour les deux parties :
+
+$top_crates1 = getTopCrates($stacks1);
+$top_crates2 = getTopCrates($stacks2);
+Les configurations résultantes des piles sont obtenues en utilisant la fonction getTopCrates.
+
+Affichage des résultats :
+
+echo "Réponse première partie : $top_crates1\n";
+echo "Réponse deuxième partie : $top_crates2\n";
+Les résultats des deux parties du problème sont affichés.
+
+Définition de la fonction getTopCrates :
+
+function getTopCrates($stacks) {
+    $top_crates = '';
+
+    foreach ($stacks as $stack) {
+        $top_crates .= end($stack);
+    }
+
+    return $top_crates;
+}
+La fonction getTopCrates retourne une chaîne représentant les caisses du dessus de chaque pile.
+
+Jour 6
+
+Lecture du fichier d'entrée et conversion en tableau de caractères :
+
+$input = str_split(file_get_contents(__DIR__ . '/input-day6.txt'));
+Le contenu du fichier input-day6.txt est lu et converti en un tableau de caractères ($input).
+
+Recherche du premier marqueur :
+
+for ($markerpos1 = 4; $markerpos1 < count($input); $markerpos1++) {
+    if (checkForMarker(array_slice($input, $markerpos1 - 4, 4))) {
+        echo "Réponse : $markerpos1\n";
+        break;
+    }
+}
+Une boucle for parcourt le tableau $input à partir de la position 4. À chaque itération, elle extrait une fenêtre de 4 caractères et vérifie s'il y a un marqueur en appelant la fonction checkForMarker. Si un marqueur est trouvé, la position est affichée et la boucle est interrompue.
+
+Recherche du deuxième marqueur :
+
+for ($markerpos2 = 14; $markerpos2 < count($input); $markerpos2++) {
+    if (checkForMarker(array_slice($input, $markerpos2 - 14, 14))) {
+        echo "Réponse : $markerpos2\n";
+        break;
+    }
+}
+Une deuxième boucle similaire est utilisée pour rechercher le deuxième marqueur, en utilisant une fenêtre de 14 caractères.
+
+Définition de la fonction checkForMarker :
+
+function checkForMarker($window) {
+    $uniq = array_unique($window);
+    return count($uniq) == count($window);
+}
+La fonction checkForMarker prend une fenêtre de caractères en entrée, la convertit en un tableau unique ($uniq), puis vérifie si la longueur du tableau unique est égale à la longueur de la fenêtre. Si c'est le cas, cela signifie qu'il n'y a pas de caractères en double, et la fonction retourne true, indiquant la présence d'un marqueur.
+
+Jour 7
+
+Lecture du fichier d'entrée :
+
+$input = file(__DIR__ . '/input-day7.txt', FILE_IGNORE_NEW_LINES);
+
+Le contenu du fichier input-day7.txt est lu ligne par ligne et stocké dans le tableau $input.
+
+Initialisation des variables :
+
+$cur_dir = '/';
+$directories = [];
+
+La variable $cur_dir est initialisée à la racine, et $directories est un tableau qui stockera la taille de chaque répertoire.
+
+Parcours du fichier d'entrée :
+
+foreach ($input as $line) {
+    // ...
+}
+
+Une boucle foreach itère sur chaque ligne du fichier d'entrée.
+
+Traitement des commandes de changement de répertoire ($ cd) :
+
+if (preg_match('~^\$ cd (.+)$~', $line, $matches)) {
+    // ...
+}
+
+Si la ligne correspond à une commande de changement de répertoire, le répertoire courant ($cur_dir) est mis à jour en conséquence.
+
+Traitement des tailles de fichiers :
+
+else {
+    list($filesize, $filename) = explode(' ', $line);
+    // ...
+}
+
+Si la ligne ne correspond pas à une commande de changement de répertoire, elle est traitée comme une taille de fichier, et la taille est ajoutée au répertoire courant ainsi qu'à ses répertoires parents.
+
+Calcul des sommes pour la première et la deuxième partie :
+
+$part1_sum = $part2_sum = 0;
+$space_available = 70000000 - $directories['/'];
+$additional_space_needed = 30000000 - $space_available;
+
+Des variables sont initialisées pour stocker les sommes pour la première et la deuxième partie, ainsi que pour calculer l'espace disponible et l'espace supplémentaire nécessaire.
+
+Tri des répertoires par taille :
+
+sort($directories);
+
+Les tailles des répertoires sont triées.
+
+Calcul des sommes finales :
+
+foreach ($directories as $size) {
+    if ($size < 100000)
+        $part1_sum += $size;
+
+    if (empty($part2_sum) && $size >= $additional_space_needed)
+        $part2_sum = $size;
+
+    if ($size >= 100000 && !empty($part2_sum))
+        break;
+}
+
+Une boucle parcourt les répertoires triés et calcule les sommes pour la première et la deuxième partie en fonction des conditions spécifiées.
+
+Affichage des résultats :
+
+echo "Réponse première partie : $part1_sum\n";
+echo "Réponse deuxième partie : $part2_sum\n";
+
+Les résultats des deux parties du problème sont affichés.
+
+Jour 8
+
+Lecture du fichier d'entrée et initialisation des variables :
+
+$input = file(__DIR__ . '/input-day8.txt', FILE_IGNORE_NEW_LINES);
+$visible_trees = [];
+$highest_trees = ['row' => [], 'col' => []];
+$max_row = count($input) - 1;
+$max_col = strlen($input[0]) - 1;
+$trees_by_height = [];
+
+Le contenu du fichier input-day8.txt est lu ligne par ligne et différentes variables sont initialisées pour le traitement ultérieur.
+
+Parcours des arbres et calcul des arbres visibles :
+
+for ($y = 0; $y <= $max_row; $y++)
+    for ($x = 0; $x <= $max_col; $x++) {
+        // ...
+    }
+
+Deux boucles imbriquées parcourent chaque cellule du paysage, et différentes informations sur les arbres et les hauteurs sont collectées.
+
+Calcul des arbres visibles dans chaque direction :
+
+for ($y = 0; $y <= $max_row; $y++)
+    for ($x = 0; $x <= $max_col; $x++) {
+        // ...
+        if ($highest_trees['row'][$y]['left'] < $input[$y][$x]) {
+            $visible_trees[$x . '|' . $y] = true;
+            $highest_trees['row'][$y]['left'] = $input[$y][$x];
+        }
+        if ($highest_trees['col'][$x]['top'] < $input[$y][$x]) {
+            $visible_trees[$x . '|' . $y] = true;
+            $highest_trees['col'][$x]['top'] = $input[$y][$x];
+        }
+    }
+
+Les hauteurs les plus élevées d'arbres dans les directions gauche (row) et haut (col) sont enregistrées, et les arbres visibles dans ces directions sont marqués.
+
+Calcul du nombre d'arbres visibles :
+
+echo "Réponse partie 1 : " . count($visible_trees) . "\n";
+
+Le nombre total d'arbres visibles est affiché pour la première partie.
+
+Calcul du meilleur emplacement pour observer le paysage :
+
+ksort($trees_by_height);
+$max_scenic_score = 0;
+$taller_trees = [];
+$best_tree = null;
+
+Les hauteurs des arbres sont triées, et des variables sont initialisées pour le calcul du meilleur emplacement.
+
+Calcul du meilleur emplacement pour observer le paysage (Partie 2) :
+
+while ($tall_trees = array_pop($trees_by_height)) {
+    // ...
+}
+
+Une boucle parcourt les hauteurs des arbres, et le meilleur emplacement est déterminé en calculant un score basé sur la distance entre les arbres.
+
+Affichage des résultats pour la deuxième partie :
+
+echo "Réponse partie 2 : $max_scenic_score\n";
+
+Le score du meilleur emplacement pour observer le paysage est affiché pour la deuxième partie.
+
+Jour 9 
+
+Initialisation des variables :
+
+$input = file(__DIR__ . '/input-day9.txt', FILE_IGNORE_NEW_LINES);
+$positions_of_tail = [];
+$rope = [];
+
+for ($length = 0; $length < 10; $length++)
+    $rope[] = [0, 0]; // X|Y
+
+Le contenu du fichier input-day9.txt est lu ligne par ligne, et différentes variables sont initialisées pour le traitement ultérieur.
+
+Parcours des mouvements dans la corde :
+
+foreach ($input as $move) {
+    // ...
+}
+
+Une boucle foreach itère sur chaque mouvement spécifié dans le fichier d'entrée.
+
+Traitement des mouvements :
+
+list($direction, $steps) = explode(' ', $move);
+
+for ($i = 0; $i < $steps; $i++) {
+    // ...
+}
+
+Chaque mouvement spécifié est décomposé en direction ($direction) et nombre d'étapes ($steps), puis chaque étape est traitée.
+
+Mise à jour des coordonnées de la corde :
+
+switch ($direction) {
+    case 'L': $rope[0][0]--; break;
+    case 'R': $rope[0][0]++; break;
+    case 'D': $rope[0][1]--; break;
+    case 'U': $rope[0][1]++; break;
+}
+
+Les coordonnées de la corde sont mises à jour en fonction de la direction.
+
+Détection de collisions et mise à jour des positions :
+
+for ($length = 1; $length < 10; $length++) {
+    // ...
+}
+
+Pour chaque segment de la corde (sauf le premier), les collisions sont détectées et les positions sont mises à jour en conséquence.
+
+Mise à jour des positions de la queue de la corde :
+
+$positions_of_tail[1][$rope[1][0] . '|' . $rope[1][1]] = true;
+$positions_of_tail[9][$rope[9][0] . '|' . $rope[9][1]] = true;
+
+Les positions des deux extrémités de la corde sont enregistrées dans un tableau pour chaque mouvement.
+
+Affichage des résultats pour les deux parties du problème :
+
+echo 'Réponse partie 1 :  ' .  count($positions_of_tail[1]) . "\n";
+echo 'Réponse partie 2 :  ' . count($positions_of_tail[9]) . "\n";
+
+Le nombre de positions distinctes de la queue de la corde pour chaque extrémité est affiché pour les deux parties du problème.
+
+Jour 10
+
+Initialisation des variables :
+
+$input = file(__DIR__ . '/input-day10.txt', FILE_IGNORE_NEW_LINES);
+$X = 1;
+$cycles = [$X];
+
+Le contenu du fichier input-day10.txt est lu ligne par ligne, et différentes variables sont initialisées pour le traitement ultérieur.
+
+Parcours des instructions et génération des cycles :
+
+foreach ($input as $instruction) {
+    // ...
+}
+
+Une boucle foreach itère sur chaque instruction spécifiée dans le fichier d'entrée.
+
+Traitement des instructions et mise à jour des cycles :
+
+if ($instruction == 'noop')
+    $cycles[] = $X;
+else {
+    // ...
+}
+
+Si l'instruction est "noop", la valeur actuelle de $X est ajoutée à la séquence des cycles. Sinon, l'instruction est traitée, la valeur de $X est mise à jour, et la nouvelle valeur est également ajoutée à la séquence des cycles.
+
+Calcul de la somme des forces de signalisation pour la première partie :
+
+$signal_strength_sum = 0;
+
+foreach ([20, 60, 100, 140, 180, 220] as $cycle)
+    $signal_strength_sum += $cycle * $cycles[$cycle - 1];
+
+echo "Réponse première partie: $signal_strength_sum\n";
+
+La somme des forces de signalisation pour des positions spécifiques dans la séquence des cycles est calculée et affichée.
+
+Affichage de la séquence des cycles pour la deuxième partie :
+
+echo "Réponse deuxième partie:";
+
+for ($pixel = 0; $pixel < 240; $pixel++) {
+    // ...
+}
+
+echo "\n";
+
+Une boucle for itère sur chaque pixel dans une grille de 240 pixels. La séquence des cycles est utilisée pour déterminer si un pixel spécifique doit être affiché comme '█' (plein) ou '∙' (vide).
+
+Jour 11
+
+Lecture et analyse des données d'entrée :
+
+$input = file_get_contents(__DIR__ . '/input-day11.txt');
+$monkeys = [];
+
+foreach (explode("\n\n", $input) as $monkey) {
+    // ...
+}
+
+Les données d'entrée sont lues et divisées en parties distinctes pour chaque singe. Les informations essentielles sont extraites à l'aide d'une expression régulière.
+
+Traitement des données et initialisation des singes :
+
+foreach ($monkeys as $monkey) {
+    // ...
+}
+
+Les informations extraites sont utilisées pour initialiser chaque singe avec ses règles spécifiques, les objets qu'il détient, et les actions à effectuer en fonction de ces règles.
+
+Fonction principale (business) :
+
+function business($monkeys, $part) {
+    // ...
+}
+
+La fonction business simule le comportement des singes. Elle effectue plusieurs itérations, manipulant les objets selon les règles spécifiques de chaque singe.
+
+Simulation du comportement des singes :
+
+for ($round = 0; $round < $max_rounds; $round++) {
+    foreach ($monkeys as &$monkey) {
+        // ...
+    }
+}
+
+Les singes effectuent des opérations sur les objets en fonction de leurs règles spécifiques. Ces opérations sont répétées pendant un certain nombre de rounds.
+
+Calcul des inspections pour chaque singe :
+
+$inspections = [];
+
+if ($round == $max_rounds - 1) {
+    $inspections[] = $monkey['inspections'];
+}
+
+Le nombre d'inspections effectuées par chaque singe est enregistré, et à la fin de la simulation, ces nombres sont triés pour obtenir les deux plus grands.
+
+Affichage des résultats pour les deux parties du problème :
+
+echo 'Réponse première partie : '  . business($monkeys, 1) . "\n";
+echo 'Réponse deuxième partie : ' . business($monkeys, 2) . "\n";
+
+Les résultats des simulations pour les deux parties du problème sont affichés.
+
+Jour 12
+
+Lecture de l'input : 
+
+$input = file ( __DIR__ . '/input-day12.txt', FILE_IGNORE_NEW_LINES );
+
+Le contenu de l'input est lu ligne par ligne.
+
+Initialisation de la carte et des points de départ/arrêt :
+
+$map = [];
+$start = $end = [];
+$lowest = [];
+
+foreach ($input as $y => $row) {
+    foreach (str_split($row) as $x => $elevation) {
+        switch ($elevation) {
+            // ...
+        }
+    }
+}
+
+Les points de départ (S), d'arrêt (E), et les points bas (a) sont identifiés dans la carte. Chaque position de la carte reçoit une valeur ASCII correspondant à son élévation.
+
+Recherche de chemin pour la première partie :
+
+$path_1 = pathfinder($start, [$end]);
+
+La fonction pathfinder est utilisée pour trouver un chemin entre le point de départ et le point d'arrêt. Le résultat est stocké dans $path_1.
+
+Recherche de chemin pour la deuxième partie :
+
+$path_2 = pathfinder($end, $lowest, 'down');
+
+Une deuxième recherche de chemin est effectuée, cette fois entre le point d'arrêt et les points bas. Le résultat est stocké dans $path_2.
+
+Affichage des résultats :
+
+echo 'Réponse première partie: ' . (count($path_1) - 1) . "\n";
+echo 'Réponse deuxième partie: ' . (count($path_2) - 1) . "\n";
+
+Les longueurs des chemins trouvés sont affichées. Les - 1 sont utilisés car la valeur finale est incluse dans la longueur du chemin.
+
+Fonction pathfinder :
+
+function pathfinder($start, $end, $direction = 'up') {
+    // ...
+}
+
+Cette fonction utilise une recherche en largeur (BFS) pour trouver un chemin entre le point de départ et le point d'arrêt ou les points bas, selon la direction fournie.
+
+Fonction get_adjacent :
+
+function get_adjacent($x, $y, $direction) {
+    // ...
+}
+
+Cette fonction retourne les cellules adjacentes dans une direction spécifiée.
+
+Fonction reached_target :
+
+function reached_target($cell, $targets) {
+    // ...
+}
+
+Cette fonction vérifie si une cellule donnée correspond à l'un des points d'arrêt spécifiés.
