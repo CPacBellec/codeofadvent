@@ -1,29 +1,28 @@
 <?php
 
-// Fonction pour détecter le début du paquet
-function findStartOfPacket($datastream) {
-    $length = strlen($datastream);
+$input = str_split ( file_get_contents ( __DIR__ . '/input-day6.txt' ) );
 
-    for ($i = 3; $i < $length; $i++) {
-        $chars = str_split(substr($datastream, $i - 3, 4));
-
-        // Vérifie si les quatre caractères sont tous différents
-        if (count(array_unique($chars)) === 4) {
-            return $i + 1; // Retourne la position du début du paquet
-        }
+for ( $markerpos1 = 4; $markerpos1 < count ( $input ); $markerpos1++ )
+{
+    if ( checkForMarker ( array_slice ( $input, $markerpos1 - 4, 4 ) ) )
+    {
+        echo "First part: $markerpos1\n";
+        break;
     }
-
-    return -1; // Retourne -1 si aucun début de paquet n'est trouvé
 }
 
-// Lecture du contenu du fichier
-$inputFile = 'input-day6.txt';
-$datastream = file_get_contents($inputFile);
+for ( $markerpos2 = 14; $markerpos2 < count ( $input ); $markerpos2++ )
+{
+    if ( checkForMarker ( array_slice ( $input, $markerpos2 - 14, 14 ) ) )
+    {
+        echo "Second part: $markerpos2\n";
+        break;
+    }
+}
 
-// Appel de la fonction pour trouver le début du paquet
-$result = findStartOfPacket($datastream);
+function checkForMarker ( $window )
+{
+    $uniq = array_unique ( $window );
 
-// Affichage du résultat
-echo "Nombre de caractères avant le début du paquet : $result\n";
-
-?>
+    return count ( $uniq ) == count ( $window );
+}

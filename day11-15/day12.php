@@ -123,7 +123,7 @@ function get_adjacent ( $x, $y, $direction )
     return $adjacent;
 }
 /**
- * have we reached (any of) the target(s)?
+ * 
  *
  * @param array $cell x|y
  * @param array $targets array of x|y

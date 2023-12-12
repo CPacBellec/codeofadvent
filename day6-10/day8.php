@@ -1,71 +1,122 @@
 <?php
-// Étape 1 : Lire le contenu du fichier
-$input = file_get_contents("input-day8.txt");
-$lines = explode("\n", $input);
+$input = file ( __DIR__ . '/input-day8.txt', FILE_IGNORE_NEW_LINES );
 
-// Étape 2 : Transformer les données en tableau bidimensionnel
-$grid = [];
-foreach ($lines as $line) {
-    $grid[] = str_split(trim($line));
+$visible_trees = [];
+
+$max_row = count ( $input ) - 1;
+$max_col = strlen ( $input [ 0 ] ) - 1;
+
+$highest_trees = [ 'row' => [], 'col' => [] ];
+
+for ( $i = 0; $i <= $max_col; $i++ )
+{
+    $highest_trees [ 'col' ][ $i ][ 'top'    ] = -1;
+    $highest_trees [ 'col' ][ $i ][ 'bottom' ] = -1;
+}
+for ( $i = 0; $i <= $max_row; $i++ )
+{
+    $highest_trees [ 'row' ][ $i ][ 'left'  ] = -1;
+    $highest_trees [ 'row' ][ $i ][ 'right' ] = -1;
 }
 
-// Fonction pour vérifier si un arbre est visible dans une direction donnée
-function isVisible($row, $col, $dir, $grid) {
-    $height = $grid[$row][$col];
+$trees_by_height = [];
 
-    switch ($dir) {
-        case 'up':
-            for ($i = $row - 1; $i >= 0; $i--) {
-                if ($grid[$i][$col] >= $height) {
-                    return false;
-                }
-            }
-            break;
-        case 'down':
-            for ($i = $row + 1; $i < count($grid); $i++) {
-                if ($grid[$i][$col] >= $height) {
-                    return false;
-                }
-            }
-            break;
-        case 'left':
-            for ($j = $col - 1; $j >= 0; $j--) {
-                if ($grid[$row][$j] >= $height) {
-                    return false;
-                }
-            }
-            break;
-        case 'right':
-            for ($j = $col + 1; $j < count($grid[0]); $j++) {
-                if ($grid[$row][$j] >= $height) {
-                    return false;
-                }
-            }
-            break;
+for ( $y = 0; $y <= $max_row; $y++ )
+    for ( $x = 0; $x <= $max_col; $x++ )
+    {
+        if ( $x > 0 && $x < $max_col && $y > 0 && $y < $max_row )
+            $trees_by_height [ $input [ $y ][ $x ]][] = [ 'x' => $x, 'y' => $y ];
+
+        if ( $highest_trees [ 'row' ][ $y ][ 'left' ] < $input [ $y ][ $x ] )
+        {
+            $visible_trees [ $x . '|' . $y ] = true;
+            $highest_trees [ 'row' ][ $y ][ 'left' ] = $input [ $y ][ $x ];
+        }
+
+        if ( $highest_trees [ 'col' ][ $x ][ 'top' ] < $input [ $y ][ $x ] )
+        {
+            $visible_trees [ $x . '|' . $y ] = true;
+            $highest_trees [ 'col' ][ $x ][ 'top' ] = $input [ $y ][ $x ];
+        }
     }
 
-    return true;
-}
+for ( $y = $max_row; $y >= 0; $y-- )
+    for ( $x = $max_col; $x >= 0; $x-- )
+    {
+        if ( $highest_trees [ 'row' ][ $y ][ 'right' ] < $input [ $y ][ $x ] )
+        {
+            $visible_trees [ $x . '|' . $y ] = true;
+            $highest_trees [ 'row' ][ $y ][ 'right' ] = $input [ $y ][ $x ];
+        }
 
-// Étape 3 : Parcourir chaque arbre dans la grille et compter les arbres visibles
-$totalVisibleTrees = 0;
-for ($row = 0; $row < count($grid); $row++) {
-    for ($col = 0; $col < count($grid[0]); $col++) {
-        $visible = isVisible($row, $col, 'up', $grid) ||
-                   isVisible($row, $col, 'down', $grid) ||
-                   isVisible($row, $col, 'left', $grid) ||
-                   isVisible($row, $col, 'right', $grid);
+        if ( $highest_trees [ 'col' ][ $x ][ 'bottom' ] < $input [ $y ][ $x ] )
+        {
+            $visible_trees [ $x . '|' . $y ] = true;
+            $highest_trees [ 'col' ][ $x ][ 'bottom' ] = $input [ $y ][ $x ];
+        }
+    }
 
-        if ($visible) {
-            $totalVisibleTrees++;
+echo 'Réponse partie 1 ' . count ( $visible_trees ) . "\n";
+
+ksort ( $trees_by_height );
+
+$max_scenic_score = 0;
+
+$taller_trees = [];
+
+$best_tree = null;
+
+while ( $tall_trees = array_pop ( $trees_by_height ) )
+{
+    $taller_trees = array_merge ( $taller_trees, $tall_trees );
+
+    foreach ( $tall_trees as $tree )
+    {
+        $distances = [
+            'left'   => $tree [ 'x' ],
+            'top'    => $tree [ 'y' ],
+            'right'  => $max_row - $tree [ 'x' ],
+            'bottom' => $max_col - $tree [ 'y' ]
+        ];
+
+        foreach ( $taller_trees as $compare )
+        {
+            
+            if ( $tree [ 'x' ] == $compare [ 'x' ] && $tree [ 'y' ] == $compare [ 'y' ] )
+                continue;
+
+            if ( $tree [ 'x' ] == $compare [ 'x' ] )
+            {
+                $diff_y = $tree [ 'y' ] - $compare [ 'y' ];
+
+                if ( $diff_y > 0 )
+                    $distances [ 'top' ] = min ( $distances [ 'top' ], $diff_y );
+                else
+                    $distances [ 'bottom' ] = min ( $distances [ 'bottom' ], abs ( $diff_y ) );
+            }
+
+            if ( $tree [ 'y' ] == $compare [ 'y' ] )
+            {
+                $diff_x = $tree [ 'x' ] - $compare [ 'x' ];
+
+                if ( $diff_x > 0 )
+                    $distances [ 'left' ] = min ( $distances [ 'left' ], $diff_x );
+                else
+                    $distances [ 'right' ] = min ( $distances [ 'right' ], abs ( $diff_x ) );
+            }
+        }
+
+        $tree_score = array_product ( $distances );
+
+        if ( $tree_score > $max_scenic_score )
+        {
+            $best_tree = $tree;
+            $max_scenic_score = $tree_score;
         }
     }
 }
 
-// Étape 4 : Afficher le résultat
-echo "Le nombre total d'arbres visibles depuis l'extérieur de la grille est : " . $totalVisibleTrees . PHP_EOL;
-
-?>
+echo "Réponse partie 2 : $max_scenic_score\n";
 
 
 
