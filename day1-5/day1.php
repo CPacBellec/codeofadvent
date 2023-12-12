@@ -9,7 +9,7 @@ $sums = [];
 foreach ( $calories_by_elf as $elf_nr => $cbf )
     $sums[] = array_sum ( explode ( "\n", $cbf ) );
 
-echo 'First part: ' . max ( $sums ) . "\n";
+echo 'Réponse partie 1 : ' . max ( $sums ) . "\n";
 
 rsort ( $sums );
 
@@ -18,4 +18,4 @@ $topthree = 0;
 for ( $i = 0; $i < 3; $i++ )
     $topthree += $sums [ $i ];
 
-echo "Second part: $topthree\n";
+echo "Réponse partie 2 : $topthree\n";
