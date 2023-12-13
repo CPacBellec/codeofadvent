@@ -56,7 +56,7 @@ for ( $y = $max_row; $y >= 0; $y-- )
         }
     }
 
-echo "'Réponse partie 1 :' . count ( $visible_trees ) . \n";
+echo 'Réponse partie 1: ' . count ( $visible_trees ) . "\n";
 
 ksort ( $trees_by_height );
 
